@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="docs/images/prisma-banner.png" width="100%" alt="Prisma Central — Fontes distintas. Decisões claras. Demo sintética de qualidade e conciliação entre ERP Core, CRM e Omnichannel." />
+  <img src="prisma-banner.png" width="100%" alt="Prisma Central — Fontes distintas. Decisões claras. Demo sintética de qualidade e conciliação entre ERP Core, CRM e Omnichannel." />
 </p>
 
 <p align="center">
-  <img src="docs/images/prisma-typing.gif" width="720" alt="Três fontes. Uma leitura rastreável. Contato coincidente não confirma identidade." />
+  <img src="prisma-typing.gif" width="720" alt="Três fontes. Uma leitura rastreável. Contato coincidente não confirma identidade." />
 </p>
 
 <p align="center">
@@ -35,7 +35,7 @@ A proposta não é juntar pessoas automaticamente. É tornar a evidência legív
 > **Demonstração independente, local e somente leitura.** Nomes, empresas, contatos, conversas e mensagens são gerados do zero. Não há dados reais, credenciais, endpoints privados ou conexão com sistemas de uma organização.
 
 <p align="center">
-  <img src="docs/images/prisma-cards.png" width="100%" alt="Origem preservada: IDs próprios e chave composta. Conciliação explicável: referência, candidato ou conflito. Evidências verificáveis: snapshots JSONL e SHA-256; fonte ausente não equivale a zero." />
+  <img src="prisma-cards.png" width="100%" alt="Origem preservada: IDs próprios e chave composta. Conciliação explicável: referência, candidato ou conflito. Evidências verificáveis: snapshots JSONL e SHA-256; fonte ausente não equivale a zero." />
 </p>
 
 ### O que quero demonstrar
@@ -50,11 +50,11 @@ A proposta não é juntar pessoas automaticamente. É tornar a evidência legív
 
 ### Aurora · leitura clara
 
-![Painel real da demo no tema Aurora, com dados inteiramente fictícios](docs/images/painel-aurora.png)
+![Painel real da demo no tema Aurora, com dados inteiramente fictícios](painel-aurora.png)
 
 ### Nocturne · foco nas evidências
 
-![Painel real da demo no tema Nocturne, com os mesmos snapshots sintéticos](docs/images/painel-nocturne.png)
+![Painel real da demo no tema Nocturne, com os mesmos snapshots sintéticos](painel-nocturne.png)
 
 O prisma triangular e o vidro translúcido fazem parte da identidade do projeto. **Verde identifica ERP Core, azul identifica CRM e vermelho identifica Omnichannel.** Essas cores indicam origem, não qualidade ou confiança.
 
