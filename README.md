@@ -1,106 +1,174 @@
-# Prisma Central 0.3.2
+<p align="center">
+  <img src="docs/images/prisma-banner.png" width="100%" alt="Prisma Central — Fontes distintas. Decisões claras. Demo sintética de qualidade e conciliação entre ERP Core, CRM e Omnichannel." />
+</p>
 
-**Fontes distintas. Decisões claras.**
+<p align="center">
+  <img src="docs/images/prisma-typing.gif" width="720" alt="Três fontes. Uma leitura rastreável. Contato coincidente não confirma identidade." />
+</p>
 
-Banco SQLite e APIs locais **inteiramente sintéticos** para demonstrar integração, qualidade e conciliação cadastral entre ERP Core, CRM e Omnichannel.
+<p align="center">
+  <a href="https://github.com/kpassaros/prisma-central/actions/workflows/tests.yml"><img src="https://github.com/kpassaros/prisma-central/actions/workflows/tests.yml/badge.svg" alt="Status atual do workflow de testes" /></a>
+  <img src="https://img.shields.io/badge/Python-3.11%2B-2868D8?style=flat&logo=python&logoColor=white" alt="Python 3.11 ou superior" />
+  <img src="https://img.shields.io/badge/vers%C3%A3o-0.3.2-536684?style=flat" alt="Versão documentada 0.3.2" />
+  <img src="https://img.shields.io/badge/dados-100%25_sint%C3%A9ticos-39735B?style=flat" alt="Todos os dados são sintéticos" />
+</p>
 
-> Não contém dados de clientes, credenciais, endpoints nem implementação privada da organização. Não é um serviço de produção. O banco é gerado do zero, com seed fixa; nenhum arquivo operacional é lido.
+<p align="center">
+  <a href="#sobre-o-projeto">Sobre</a> ·
+  <a href="#o-painel">Painel</a> ·
+  <a href="#por-dentro-do-prisma">Arquitetura</a> ·
+  <a href="#executar-localmente">Executar</a> ·
+  <a href="#escopo-e-limites">Limites</a> ·
+  <a href="#autor-e-atividade">Autor</a>
+</p>
 
-## Estrutura e nome do módulo
+## Sobre o projeto
 
-Pasta externa: `prisma_central`. Módulo interno: `prisma`. Rode os comandos a partir da pasta externa, ao lado deste README. Não instalar o pacote homônimo Prisma ORM para executar este projeto.
+**O mesmo cliente em três sistemas não significa três cadastros iguais.**
+
+Um ERP guarda o cadastro de referência. O CRM organiza o relacionamento comercial. O Omnichannel registra contatos e conversas. Cada fonte tem seus próprios IDs, campos e critérios — e as diferenças ficam escondidas quando tudo é tratado como uma única planilha.
+
+O **Prisma Central** é meu projeto de portfólio para explorar esse problema com uma demonstração reproduzível: gerar três fontes fictícias, extrair cópias verificáveis e mostrar onde os cadastros se relacionam, entram em conflito ou não podem ser comparados.
+
+A proposta não é juntar pessoas automaticamente. É tornar a evidência legível antes de qualquer decisão.
+
+> **Demonstração independente, local e somente leitura.** Nomes, empresas, contatos, conversas e mensagens são gerados do zero. Não há dados reais, credenciais, endpoints privados ou conexão com sistemas de uma organização.
+
+<p align="center">
+  <img src="docs/images/prisma-cards.png" width="100%" alt="Origem preservada: IDs próprios e chave composta. Conciliação explicável: referência, candidato ou conflito. Evidências verificáveis: snapshots JSONL e SHA-256; fonte ausente não equivale a zero." />
+</p>
+
+### O que quero demonstrar
+
+- **Integração sem perder contexto:** contratos distintos, paginação por página/cursor e chave composta de empresa + cliente.
+- **Qualidade antes de confiança:** campos incompletos, contatos compartilhados e referências conflitantes tratados como cenários de teste.
+- **Conciliação com explicação:** uma coincidência de e-mail ou telefone é um candidato, não uma identidade confirmada.
+- **Rastreabilidade:** cópias JSONL, manifesto de disponibilidade e hashes; a referência esperada dos testes fica separada do comparador.
+- **Leitura acessível:** painel web local, busca, filtros, detalhes e temas claro/escuro/sistema.
+
+## O painel
+
+### Aurora · leitura clara
+
+![Painel real da demo no tema Aurora, com dados inteiramente fictícios](docs/images/painel-aurora.png)
+
+### Nocturne · foco nas evidências
+
+![Painel real da demo no tema Nocturne, com os mesmos snapshots sintéticos](docs/images/painel-nocturne.png)
+
+O prisma triangular e o vidro translúcido fazem parte da identidade do projeto. **Verde identifica ERP Core, azul identifica CRM e vermelho identifica Omnichannel.** Essas cores indicam origem, não qualidade ou confiança.
+
+| Área | O que você encontra |
+| --- | --- |
+| Resumo | Universo Core, disponibilidade e resultados por destino |
+| Cadastros | Registros de cada fonte, IDs próprios, filtros e paginação |
+| Qualidade | Filas de preenchimento, sintaxe e valores compartilhados |
+| Conciliação | Referências, candidatos, conflitos e evidências por chave |
+| Conversas | Histórico de mensagens criado exclusivamente para a demo |
+| Snapshots | Manifesto, horários das cópias e hashes verificados |
+| Documentação | Regras e limites organizados pelas perspectivas das fontes |
+
+**Para explorar:** busque `DEMO-CORE-00008` em Conciliação para ver evidências conflitantes. `DEMO-CORE-00002` demonstra um candidato por contato. São casos sintéticos controlados, não clientes reais.
+
+## Por dentro do Prisma
 
 ```text
-prisma_central/
-├── README.md
-├── prisma/
-│   ├── __init__.py
-│   └── __main__.py
-├── tests/
-├── docs/
-└── identidade_prisma/
+Gerador determinístico · seed 42
+                  │
+                  ▼
+          SQLite sintético
+                  │
+                  ▼
+       API GET local · :8787
+       ERP Core / CRM / Omnichannel
+                  │
+                  ▼
+       Extrator paginado em loopback
+                  │
+                  ▼
+     JSONL + manifesto + hashes SHA-256
+                  │
+                  ▼
+       Painel web local · :8790
+     Qualidade / conciliação / evidências
 ```
 
-Imports, testes e comandos foram ajustados para `prisma`. O banco mantém o nome técnico `prisma_demo.sqlite` para compatibilidade; não renomear esse arquivo nem regenerar os snapshots por causa desta atualização. Os avisos de dados sintéticos continuam na interface.
+O painel lê **somente os snapshots extraídos**. Depois da extração, a API pode ser encerrada; não precisa continuar ligada para navegar no painel.
 
-## Abrir o painel com os snapshots que você já extraiu
+A chave Core é `(company_id, customer_id)`. Um ID local pode existir em empresas diferentes. IDs nativos de CRM e Omnichannel não são equiparados aos IDs do ERP, e referências opcionais não escondem inconsistências.
 
-Atualize os arquivos de código da pasta demo com os deste pacote, mantendo `data/`, `snapshots/` e `.venv`. Não copie nada para a instalação operacional. O contrato de geração/API 0.1 foi preservado; seus snapshots existentes são compatíveis se estiverem íntegros e seguirem as convenções sintéticas.
+### Tecnologias, sem inflar a stack
 
-Na pasta que contém este README:
+<p>
+  <img src="https://img.shields.io/badge/Python-2868D8?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/SQLite-163955?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" />
+  <img src="https://img.shields.io/badge/HTML5-A84526?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" />
+  <img src="https://img.shields.io/badge/CSS-2868D8?style=for-the-badge&logo=css&logoColor=white" alt="CSS" />
+  <img src="https://img.shields.io/badge/JavaScript-D6B942?style=for-the-badge&logo=javascript&logoColor=172033" alt="JavaScript" />
+  <img src="https://img.shields.io/badge/GitHub_Actions-263F61?style=for-the-badge&logo=githubactions&logoColor=white" alt="GitHub Actions" />
+</p>
 
-```powershell
-python -m prisma panel --snapshots .\snapshots --port 8790
+- **Python + biblioteca padrão:** geração, servidor HTTP, extração, validação e testes `unittest`.
+- **SQLite:** base local, relacionamentos e dados reproduzíveis.
+- **HTML, CSS, JavaScript e SVG:** interface e identidade visual; sem etapa de build frontend.
+- **JSONL + SHA-256:** cópias auditáveis e checagem de integridade.
+- **FastAPI / OpenAPI:** adaptador opcional, não requisito para executar o núcleo.
+
+O nome **Prisma Central não indica uso do Prisma ORM**. Não instale o pacote homônimo para rodar esta demo.
+
+## Executar localmente
+
+**Requisito:** Python 3.11 ou superior. O núcleo não exige instalação de bibliotecas externas.
+
+### 1. Clonar e entrar na raiz
+
+```bash
+git clone https://github.com/kpassaros/prisma-central.git
+cd prisma-central
 ```
 
-Abra **http://127.0.0.1:8790**. A API da porta 8787 não precisa ficar rodando: o painel lê somente a extração local. Encerre o painel com Ctrl+C.
+Execute todos os comandos da pasta que contém `README.md` e o diretório `prisma/`, nunca de dentro do módulo. Se usar um ZIP, abra o terminal nessa mesma raiz.
 
-Se ainda não houver snapshots, use o fluxo de geração/API/extração descrito abaixo antes de iniciar o painel. Não há fallback para bases reais ou para diretórios do projeto operacional.
-
-## Ajuste de paleta 0.3.1
-
-Restauradas as cores originais Aurora e Nocturne: fundo claro azulado `#F4F7FC`, escuro azul-marinho `#0E1523` e acentos azuis `#2868D8` / `#88B3FF`. Prisma triangular e glassmorphism preservados. A revisão substitui o prata/grafite excessivamente neutro da 0.3. Sem alteração de dados, API ou regras.
-
-## Revisão visual 0.3
-
-Prisma triangular transparente, superfícies neutras de vidro fosco, reflexos discretos e bordas luminosas. Roxo restrito à assinatura e aos detalhes de seleção; vermelho, azul e verde identificam a origem. O efeito representa transparência das evidências e transformação da leitura multicanal, não fusão automática de pessoas nem conversão comercial medida.
-
-A atualização é de apresentação: geração/API continuam no contrato 0.1.0, snapshots e regras do comparador permanecem compatíveis. Abra `identidade_prisma/Prisma_Identidade_Visual.html` para explorar o guia offline. Detalhes em [Identidade e vidro](docs/IDENTIDADE_VIDRO.md).
-
-## O que esta versão entrega
-
-- Painel Prisma com Resumo, Cadastros, Qualidade, Conciliação, Conversas, Snapshots e Documentação.
-- Temas Claro/Escuro/Sistema, navegação lateral, busca, filtros, paginação e detalhes por chave.
-- Carregador de snapshots com SHA-256, contagens, IDs/contatos sintéticos e relações de mensagens verificados.
-- Gerador determinístico: 120 cadastros Core por padrão, em duas empresas fictícias.
-- Três fontes com IDs próprios, campos e envelopes diferentes.
-- Dez cenários controlados de qualidade/conciliação; contatos coincidentes não confirmam identidade.
-- Conversas e mensagens fictícias com integridade referencial.
-- API GET somente leitura e paginação; filtros de empresa e atualização nas rotas aplicáveis.
-- Servidor loopback sem dependências e adaptador opcional FastAPI com OpenAPI.
-- Extrator que gera snapshots JSONL, manifesto de disponibilidade e hashes.
-- Verdade de referência separada do banco/API para testes.
-- Testes automatizados e configuração de GitHub Actions.
-- Identidade visual Prisma previamente aprovada: guia offline, SVGs e tokens.
-
-**Escopo:** ambiente de demonstração independente. O painel público aplica a identidade Prisma 1.3, com prisma triangular e vidro neutro, mas usa adaptadores próprios para os snapshots da demo e o comparador público simplificado. Não é o backend operacional completo nem uma substituição da instalação interna. Não há importação livre de arquivos, sincronização automática ou escrita entre fontes.
-
-## Executar sem instalar bibliotecas
-
-Requer Python 3.11 ou superior. Descompacte o ZIP e abra o terminal na pasta que contém este README.
+### 2. Gerar e conferir a base fictícia
 
 ```bash
 python -m prisma generate --customers 120 --seed 42
 python -m prisma check
 python -m unittest discover -s tests -v
+```
+
+### 3. Iniciar a API · terminal A
+
+```bash
 python -m prisma serve --port 8787
 ```
 
-Abra no navegador:
+Confira [o health local](http://127.0.0.1:8787/health). Mantenha esse terminal aberto durante a extração.
 
-```text
-http://127.0.0.1:8787/health
-http://127.0.0.1:8787/api/demo/meta
-http://127.0.0.1:8787/api/demo/core/customers?page=1&page_size=25
-http://127.0.0.1:8787/api/demo/crm/contacts?limit=25
-http://127.0.0.1:8787/api/demo/omnichannel/customers?limit=25
-```
+### 4. Extrair os snapshots · terminal B
 
-O servidor não usa token e aceita somente loopback `127.0.0.1`. **Não publique este servidor na internet**. Encerre com Ctrl+C.
-
-### Extrair snapshots pela API
-
-Com a API rodando, abra outro terminal na mesma pasta:
+Abra outro terminal na **mesma raiz**:
 
 ```bash
 python -m prisma extract --base-url http://127.0.0.1:8787 --out snapshots
 ```
 
-O extrator percorre todas as páginas das três fontes, conversas e mensagens. Não usa proxies do ambiente, recusa redirecionamentos e não aceita URLs externas. Não sobrescreve extrações existentes: escolha outra pasta para repetir. Uma fonte indisponível não produz um arquivo vazio; sua contagem fica `null` no manifesto.
+O extrator não sobrescreve uma extração existente. Se já tiver uma pasta `snapshots/` íntegra, reutilize-a; para repetir a extração, escolha outro nome com `--out` e use o mesmo caminho no próximo comando.
 
-### FastAPI opcional
+### 5. Abrir o painel · terminal B
 
-Crie um ambiente virtual e instale dependências somente se quiser o adaptador FastAPI:
+```bash
+python -m prisma panel --snapshots snapshots --port 8790
+```
+
+Abra **[http://127.0.0.1:8790](http://127.0.0.1:8790)**. Você pode encerrar a API do terminal A com `Ctrl+C` após a extração. Para fechar o painel, use `Ctrl+C` no terminal B.
+
+**Se já tiver snapshots:** basta executar o comando do painel. Não regenere a base apenas para abrir a interface. O nome técnico `prisma_demo.sqlite` foi mantido para compatibilidade.
+
+<details>
+<summary><strong>Adaptador opcional FastAPI / OpenAPI</strong></summary>
+
+Crie um ambiente virtual:
 
 ```bash
 python -m venv .venv
@@ -118,97 +186,94 @@ Ou no Linux/macOS:
 source .venv/bin/activate
 ```
 
-Então:
+Instale as dependências opcionais e inicie a API:
 
 ```bash
 python -m pip install -r requirements-api.txt
 python -m prisma serve --engine fastapi --port 8787
 ```
 
-OpenAPI JSON: `http://127.0.0.1:8787/openapi.json`. Interface Swagger: `http://127.0.0.1:8787/docs` (os assets padrão do Swagger usam CDN; o JSON OpenAPI não depende dela).
+OpenAPI: `http://127.0.0.1:8787/openapi.json`. Swagger: `http://127.0.0.1:8787/docs`.
 
-O gerador, servidor padrão e testes principais não dependem dessas bibliotecas. FastAPI está incluído como adaptador opcional; sua execução **não foi validada neste ambiente offline**, que não tem as dependências instaladas. O teste opcional será executado quando elas estiverem disponíveis. A configuração de CI foi escrita, mas ainda não executada no GitHub.
+Os assets padrão do Swagger usam CDN. O adaptador está incluído, mas não foi executado na validação local sem essas dependências; o servidor padrão é o caminho principal da demo.
 
-## Modelo de dados
+</details>
 
-```text
-companies ───< core_customers
+## Cenários que tornam a demo útil
 
-crm_contacts                 # ID nativo próprio + referência Core opcional
-omni_customers ───< conversations ───< messages
+A base padrão contém **120 cadastros Core em duas empresas fictícias**, além de registros próprios de CRM/Omnichannel, 20 conversas e 60 mensagens sintéticas. Não são indicadores de negócio.
 
-metadata                     # marcador sintético e manifesto de snapshots
-```
-
-A chave de negócio Core é **(company_id, customer_id)**, não apenas o ID local. Há um cenário com o mesmo `customer_id` em duas empresas. CRM e Omnichannel não têm FK rígida para o Core: dados incompletos e referências conflitantes são parte do problema simulado. Todas as referências normais têm a representação `company_id/customer_id`.
-
-Os IDs canônicos de todas as tabelas começam com `DEMO-`. Telefones usam DDD `00`; e-mails usam `example.test`, exceto um valor propositalmente inválido. Documentos são vazios ou `00000000000`, explicitamente inválido. As mensagens declaram seu caráter fictício.
-
-## Cenários de aceitação
-
-| Cenário | Resultado esperado no validador demo |
+| Situação simulada | Como a demo a trata |
 | --- | --- |
-| Referência Core explícita e única | Confirmado pela referência; não é validação civil |
+| Referência explícita, única e sem evidência conflitante | Pela referência; não é validação de identidade civil |
 | Contato coincidente sem referência | Candidato, sem fusão |
-| Contato compartilhado/duplicado | Conflito |
-| Chaves insuficientes | Não comparável |
-| Campos inválidos | Não comparável |
-| Cadastro somente no Core | Não encontrado no snapshot, com chave utilizável |
-| Referência e contatos apontam destinos diferentes | Conflito |
-| Referência Core duplicada no destino | Conflito |
-| Mesmo ID local em empresas distintas | Referências compostas distintas, confirmação pela referência |
-| Contato parcialmente preenchido | Candidato |
+| Contato compartilhado ou evidências divergentes | Conflito para revisão |
+| Dados insuficientes ou campos inválidos | Não comparável |
+| Core sem correspondente em uma cópia | Não encontrado naquele snapshot |
+| Mesmo ID local em empresas distintas | Chaves compostas preservadas |
+| Fonte indisponível | Não avaliada; nunca convertida em contagem zero |
 
-Também há registros exclusivos de CRM/Omnichannel, datas de snapshots distintas e simulação de fonte indisponível. A verdade de referência contém a entidade fictícia de origem e o resultado esperado; não é exposta por endpoint nem fornecida ao comparador.
+Existem dez cenários de aceitação, incluindo referência duplicada e contato parcial. Snapshots podem ter horários diferentes: a leitura não representa presença em tempo real.
 
-**Importante:** `validation.py` verifica um contrato simplificado de aceitação da demo. Não substitui o motor operacional nem implementa confirmação por documento, máscaras, avaliação completa de comparabilidade temporal, consentimento, score ou tabela mestre. Um `confirmed_by_reference` é apenas o resultado dessa regra, não prova de identidade nem autorização de escrita. Não há fusão ou atualização entre fontes.
+### Verificação e testes
 
-## Fonte indisponível
+A validação local da versão **0.3.2**, em Linux/Python 3.13, registrou **49 testes: 48 aprovados e 1 opcional FastAPI ignorado** por ausência de dependências. Os testes cobrem geração, integridade, paginação, extração HTTP, regras da demo e proteções do carregador.
 
-Use uma pasta diferente:
+O status remoto atual é apresentado pelo badge do workflow no topo. Ele é independente da validação local; as imagens de estatísticas não substituem testes ou homologação.
 
-```bash
-python -m prisma generate --out data-unavailable --customers 24 --unavailable crm
-python -m prisma check --data data-unavailable
-python -m prisma serve --data data-unavailable --port 8788
-```
+## Escopo e limites
 
-A rota CRM retorna HTTP 503. As outras fontes continuam disponíveis. O manifesto informa `available: false`. As contagens do manifesto de geração representam os dados **gerados**, não acesso bem-sucedido à fonte indisponível.
+- Não há sincronização automática, escrita entre fontes ou fusão de pessoas.
+- Coincidência de contato e confirmação por referência **não comprovam identidade civil, consentimento ou autorização de atualização**.
+- O comparador é simplificado: não implementa validação civil, score ou avaliação temporal completa.
+- Hashes detectam alterações em relação ao manifesto; não garantem sozinhos origem ou autenticidade. O carregador também confere as convenções sintéticas.
+- API e painel são restritos a loopback. **Não os publique na internet**: não são serviços autenticados, multiusuário ou prontos para produção.
+- A demo não depende de arquivos `.env`, bases reais ou conectores privados.
 
-## Reproduzir e regenerar
+## Estatísticas do repositório
 
-Mesma seed, quantidade e cenário geram os mesmos conteúdos. Horários de referência são fixos, não o relógio atual. A seed modifica os registros fictícios; não aleatoriza os resultados esperados dos cenários.
+<p>
+  <a href="https://github.com/kpassaros/prisma-central/stargazers"><img src="https://img.shields.io/github/stars/kpassaros/prisma-central?style=flat&color=2868D8&label=stars" alt="Estrelas do repositório Prisma Central" /></a>
+  <a href="https://github.com/kpassaros/prisma-central/forks"><img src="https://img.shields.io/github/forks/kpassaros/prisma-central?style=flat&color=536684&label=forks" alt="Forks do repositório Prisma Central" /></a>
+  <img src="https://img.shields.io/github/repo-size/kpassaros/prisma-central?style=flat&color=536684&label=tamanho" alt="Tamanho do repositório Prisma Central" />
+  <a href="https://github.com/kpassaros/prisma-central/commits/main/"><img src="https://img.shields.io/github/last-commit/kpassaros/prisma-central?style=flat&color=39735B&label=%C3%BAltimo%20commit" alt="Último commit do repositório Prisma Central" /></a>
+</p>
 
-Para substituir **somente uma base de demo já identificada**:
+[Ver linguagens e atividade diretamente no repositório →](https://github.com/kpassaros/prisma-central)
 
-```bash
-python -m prisma generate --customers 120 --seed 42 --force
-```
+## Autor e atividade
 
-Pare a API antes de regenerar. A API detecta alterações no manifesto e exige reinício. O gerador se recusa a sobrescrever bancos desconhecidos, mesmo com `--force`.
+**Kaíque Passaros** · Tecnologia, dados e integração.
 
-## Estrutura
+Gosto de trabalhar no ponto em que dados dispersos precisam virar uma leitura confiável. O Prisma Central traduz essa preocupação em algo que pode ser explorado: origem visível, regras explícitas e limites documentados.
 
-```text
-prisma/          # Gerador, API, extrator, validador e servidor do painel
-  web/               # Apresentação do painel público
-identidade_prisma/    # Guia de marca 1.3, vidro e prisma triangular
-tests/               # Testes sem dados reais
-.github/workflows/   # CI proposta
-requirements-api.txt # Dependências opcionais FastAPI
-README.md
-.gitignore
-```
+Os cards abaixo pertencem ao **perfil `kpassaros`**, não exclusivamente ao Prisma Central. Top languages representa os repositórios considerados pelo serviço; streak e activity graph representam contribuições do perfil, não desempenho ou qualidade deste projeto.
 
-Arquivos de execução em `data/` e `snapshots/` não são versionados: o gerador os recria. Veja [o guia do painel](docs/PAINEL_DEMO.md), [o contrato da API](docs/API.md), [o guia de publicação](docs/PUBLICACAO.md) e [o relatório de validação](docs/VALIDACAO.md).
+<p align="center">
+  <a href="https://github.com/kpassaros"><img src="https://github-readme-stats.vercel.app/api?username=kpassaros&show_icons=true&hide_border=true&bg_color=0E1523&title_color=88B3FF&text_color=CFDEEA&icon_color=88B3FF&locale=pt-br" width="49%" alt="Estatísticas gerais do perfil kpassaros, fornecidas por GitHub Readme Stats" /></a>
+  <a href="https://github.com/kpassaros?tab=repositories"><img src="https://github-readme-stats.vercel.app/api/top-langs/?username=kpassaros&layout=compact&hide_border=true&bg_color=0E1523&title_color=88B3FF&text_color=CFDEEA&locale=pt-br" width="49%" alt="Top languages do perfil kpassaros, não apenas do Prisma Central" /></a>
+</p>
 
-## Roadmap
+<p align="center">
+  <a href="https://github.com/kpassaros"><img src="https://streak-stats.demolab.com/?user=kpassaros&theme=tokyonight&hide_border=true&background=0E1523&ring=88B3FF&fire=88B3FF&currStreakLabel=88B3FF" width="70%" alt="Streak de contribuições do perfil kpassaros, fornecida por GitHub Readme Streak Stats" /></a>
+</p>
 
-1. Ampliar testes e capacidades do comparador público; integração dos snapshots ao painel já entregue na 0.2.
-2. Acrescentar extração incremental persistida, checkpoint e simulação de 429/timeout com retry.
-3. Ampliar casos de comparabilidade temporal e testes do motor completo.
-4. Empacotar com PostgreSQL/Docker se houver necessidade; não é requisito desta versão.
+<p align="center">
+  <a href="https://github.com/kpassaros"><img src="https://github-readme-activity-graph.vercel.app/graph?username=kpassaros&bg_color=0E1523&color=CFDEEA&line=88B3FF&point=72A893&area=true&hide_border=true" width="100%" alt="Activity graph de contribuições do perfil kpassaros, fornecido por GitHub Readme Activity Graph" /></a>
+</p>
 
-## Publicação e licença
+**Nota sobre os cards dinâmicos:** dependem de serviços externos, suas regras de contagem, cache e disponibilidade. Os endpoints não foram verificados nesta entrega offline. Se uma imagem não carregar, use [o perfil no GitHub](https://github.com/kpassaros) para consultar a atividade diretamente. Nenhum número foi fixado ou simulado para compor os cards.
 
-Repositório informado pelo proprietário: https://github.com/kpassaros/prisma-central. Upload ainda pendente de confirmação; nenhuma publicação remota foi executada por esta entrega. Revise os arquivos e direitos de publicação antes do primeiro commit. **A licença ainda deve ser escolhida pelo proprietário**; nenhuma licença permissiva foi presumida. Este pacote não autoriza publicar código da organização nem copiar ativos ou contratos privados.
+## Documentação e uso do código
+
+- [Contrato da API](docs/API.md)
+- [Painel da demo](docs/PAINEL_DEMO.md)
+- [Identidade visual](docs/IDENTIDADE_VIDRO.md)
+- [Validação e histórico de versões](docs/VALIDACAO.md)
+- [Cuidados para publicação](docs/PUBLICACAO.md)
+
+Este repositório foi preparado como **portfólio**. Nenhuma licença open source foi adicionada a esta entrega; a disponibilidade pública não deve ser interpretada como concessão de uma licença permissiva. Para discutir reutilização, entre em contato com o autor.
+
+---
+
+<p align="center"><strong>Fontes distintas. Decisões claras.</strong><br />Prisma Central · Portfólio de Kaíque Passaros</p>
