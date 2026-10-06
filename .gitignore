@@ -1,0 +1,38 @@
+# Credenciais e configurações privadas
+.env
+.env.*
+!.env.example
+mapeamento.json
+
+# Dados e resultados de execução
+data/
+snapshots/
+output/
+exports/
+raw/
+checkpoints/
+*.sqlite
+*.sqlite3
+*.db
+*.db-*
+*.sqlite-*
+*.jsonl
+*.csv
+*.xlsx
+*.log
+
+# Somente fixtures sintéticas revisadas
+!tests/fixtures/*.jsonl
+
+# Ambientes e caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+coverage.xml
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
