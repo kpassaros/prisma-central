@@ -1,0 +1,55 @@
+{
+  "project": "Prisma",
+  "visualRevision": "1.3.1",
+  "demoRelease": "0.3.1",
+  "tagline": "Fontes distintas. Decisões claras.",
+  "concept": "Transparência e conversão de múltiplos canais em evidências; metáfora de marca, não fusão de pessoas ou simulação óptica.",
+  "symbol": "triangular-prism",
+  "domains": {
+    "omnichannel": {
+      "light": "#A73850",
+      "dark": "#F2A1B3"
+    },
+    "crm": {
+      "light": "#285F9B",
+      "dark": "#A8C9EE"
+    },
+    "erpCore": {
+      "light": "#1C7058",
+      "dark": "#9BD5C1"
+    },
+    "prisma": {
+      "light": "#685B82",
+      "dark": "#C0B1D8"
+    }
+  },
+  "interface": {
+    "light": {
+      "canvas": "#F4F7FC",
+      "text": "#17243B",
+      "muted": "#51617A",
+      "action": "#2868D8",
+      "glassTop": "rgba(255,255,255,.74)",
+      "glassBottom": "rgba(255,255,255,.30)",
+      "themeName": "Aurora"
+    },
+    "dark": {
+      "canvas": "#0E1523",
+      "text": "#EEF3FF",
+      "muted": "#B6C3D9",
+      "action": "#88B3FF",
+      "glassTop": "rgba(100,140,204,.17)",
+      "glassBottom": "rgba(32,50,86,.42)",
+      "themeName": "Nocturne"
+    },
+    "blurPx": 28,
+    "saturationPercent": 135
+  },
+  "sourceColorsAreQualityScores": false,
+  "themes": [
+    "Claro",
+    "Escuro",
+    "Sistema"
+  ],
+  "collapsedControlPx": 44
+}

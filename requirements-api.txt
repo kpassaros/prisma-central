@@ -1,0 +1,4 @@
+# Opcional: o gerador, SQLite, servidor padrão e testes principais usam somente Python.
+fastapi>=0.115,<1.0
+uvicorn>=0.30,<1.0
+httpx>=0.27,<1.0
