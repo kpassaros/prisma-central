@@ -1,4 +1,4 @@
-# Prisma Central 0.3.2 — Aurora e Nocturne com vidro
+# Prisma Central 0.3.2
 
 **Fontes distintas. Decisões claras.**
 
