@@ -22,6 +22,27 @@
   <a href="#autor-e-atividade">Autor</a>
 </p>
 
+## Demonstração web · versão 0.4.0
+
+O projeto agora inclui uma versão **estática** para publicação no GitHub Pages, sem expor o servidor Python. A aplicação local permanece na versão 0.3.2.
+
+- Dados fictícios preparados pelo pipeline Python real: geração → API local → extração → validação → conciliação.
+- Navegação em memória, restauração da demo e quatro cenários de disponibilidade.
+- Página **Engenharia de Dados** com sete etapas e o percurso de um registro da origem até a evidência.
+- Identidade Aurora/Nocturne, filtros, busca, paginação e conversas sintéticas preservados.
+
+**Publicação inicial pendente:** o endereço público será confirmado após o deploy. O site não executa API ao vivo, não coleta dados do visitante e não mantém banco remoto.
+
+[Guia de prévia, arquitetura e publicação →](docs/SITE_PUBLICO.md)
+
+```bash
+python scripts/build_site.py
+python scripts/audit_site.py _site
+python -m http.server 8000 --directory _site --bind 127.0.0.1
+```
+
+Abra `http://127.0.0.1:8000/`. O build não precisa Node/npm ou dependências externas. Não envie `_site/` manualmente: o workflow gera e publica somente essa saída revisada.
+
 ## Sobre o projeto
 
 **O mesmo cliente em três sistemas não significa três cadastros iguais.**
