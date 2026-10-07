@@ -262,29 +262,6 @@ O status remoto atual é apresentado pelo badge do workflow no topo. Ele é inde
 
 [Ver linguagens e atividade diretamente no repositório →](https://github.com/kpassaros/prisma-central)
 
-## Autor e atividade
-
-**Kaíque Passaros** · Tecnologia, dados e integração.
-
-Gosto de trabalhar no ponto em que dados dispersos precisam virar uma leitura confiável. O Prisma Central traduz essa preocupação em algo que pode ser explorado: origem visível, regras explícitas e limites documentados.
-
-Os cards abaixo pertencem ao **perfil `kpassaros`**, não exclusivamente ao Prisma Central. Top languages representa os repositórios considerados pelo serviço; streak e activity graph representam contribuições do perfil, não desempenho ou qualidade deste projeto.
-
-<p align="center">
-  <a href="https://github.com/kpassaros"><img src="https://github-readme-stats.vercel.app/api?username=kpassaros&show_icons=true&hide_border=true&bg_color=0E1523&title_color=88B3FF&text_color=CFDEEA&icon_color=88B3FF&locale=pt-br" width="49%" alt="Estatísticas gerais do perfil kpassaros, fornecidas por GitHub Readme Stats" /></a>
-  <a href="https://github.com/kpassaros?tab=repositories"><img src="https://github-readme-stats.vercel.app/api/top-langs/?username=kpassaros&layout=compact&hide_border=true&bg_color=0E1523&title_color=88B3FF&text_color=CFDEEA&locale=pt-br" width="49%" alt="Top languages do perfil kpassaros, não apenas do Prisma Central" /></a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/kpassaros"><img src="https://streak-stats.demolab.com/?user=kpassaros&theme=tokyonight&hide_border=true&background=0E1523&ring=88B3FF&fire=88B3FF&currStreakLabel=88B3FF" width="70%" alt="Streak de contribuições do perfil kpassaros, fornecida por GitHub Readme Streak Stats" /></a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/kpassaros"><img src="https://github-readme-activity-graph.vercel.app/graph?username=kpassaros&bg_color=0E1523&color=CFDEEA&line=88B3FF&point=72A893&area=true&hide_border=true" width="100%" alt="Activity graph de contribuições do perfil kpassaros, fornecido por GitHub Readme Activity Graph" /></a>
-</p>
-
-**Nota sobre os cards dinâmicos:** dependem de serviços externos, suas regras de contagem, cache e disponibilidade. Os endpoints não foram verificados nesta entrega offline. Se uma imagem não carregar, use [o perfil no GitHub](https://github.com/kpassaros) para consultar a atividade diretamente. Nenhum número foi fixado ou simulado para compor os cards.
-
 ## Documentação e uso do código
 
 - [Contrato da API](docs/API.md)
