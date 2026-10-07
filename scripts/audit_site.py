@@ -9,7 +9,7 @@ from prisma.panel import SnapshotPanel, native, SOURCES, TEXTS
 
 def audit(folder):
     root=Path(folder).resolve()
-    expected={'index.html','.nojekyll','.prisma-static-build','build-report.json','assets/app.js','assets/adapter.js','assets/panel.css','data/demo.json',
+    expected={'favicon.svg','favicon.ico','index.html','.nojekyll','.prisma-static-build','build-report.json','assets/app.js','assets/adapter.js','assets/panel.css','data/demo.json',
               *('data/snapshots/'+f for f in ('manifest.json','core.jsonl','crm.jsonl','omnichannel.jsonl','conversations.jsonl','messages.jsonl'))}
     files={str(p.relative_to(root)) for p in root.rglob('*') if p.is_file()}
     if files!=expected:raise ValueError('Arquivos fora da fronteira pública: '+str(files^expected))
@@ -43,6 +43,8 @@ def audit(folder):
             if any(r['text'] not in TEXTS or r['conversation_id'] not in conv_ids for r in messages):raise ValueError('Mensagem não sintética ou relação inválida.')
     index=(root/'index.html').read_text(encoding='utf-8')
     app=(root/'assets/app.js').read_text(encoding='utf-8')
+    for name in ('favicon.svg','favicon.ico'):
+        if './'+name+'?v=1' not in index:raise ValueError('Favicon não referenciado no HTML público: '+name)
     if '__BOOTSTRAP__' in index or '__NONCE__' in index or 'X-Prisma-Demo-Token' in app:raise ValueError('Bootstrap operacional não removido.')
     if 'fetch(' in app:raise ValueError('UI pública contém fetch fora do adaptador de artefato.')
     if 'src="/' in index or 'href="/' in index:raise ValueError('Caminho de asset absoluto incompatível com Pages.')

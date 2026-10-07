@@ -45,3 +45,40 @@ class StaticSiteTests(unittest.TestCase):
         finally:f.write_bytes(original)
     def test_source_application_not_changed(self):
         source=(ROOT/'prisma/web/app.js').read_text();self.assertIn('X-Prisma-Demo-Token',source);self.assertNotIn('window.PrismaStatic',source)
+
+    def test_favicon_links_are_relative_and_cache_versioned(self):
+        html=(self.root/'index.html').read_text(encoding='utf-8')
+        self.assertIn('href="./favicon.svg?v=1" sizes="any" type="image/svg+xml"',html)
+        self.assertIn('href="./favicon.ico?v=1" sizes="16x16 32x32 48x48" type="image/x-icon"',html)
+    def test_favicon_assets_are_copied_and_hashed(self):
+        import hashlib
+        for name in ('favicon.svg','favicon.ico'):
+            data=(self.root/name).read_bytes()
+            self.assertEqual(data,(ROOT/'site'/name).read_bytes())
+            self.assertEqual(hashlib.sha256(data).hexdigest(),self.report['sha256'][name])
+    def test_favicon_formats_and_approved_geometry(self):
+        import struct
+        import xml.etree.ElementTree as ET
+        svg=ET.fromstring((self.root/'favicon.svg').read_text(encoding='utf-8'))
+        ns={'s':'http://www.w3.org/2000/svg'}
+        self.assertEqual(svg.attrib['viewBox'],'0 0 64 64')
+        self.assertIn('prefers-color-scheme:dark',svg.find('s:style',ns).text)
+        approved=ET.fromstring((ROOT/'identidade_prisma/prisma-symbol.svg').read_text(encoding='utf-8'))
+        shapes=lambda node:[(c.tag,c.attrib) for c in node if c.tag.rsplit('}',1)[-1] in ('path','polygon')]
+        self.assertEqual(shapes(svg),shapes(approved))
+        data=(self.root/'favicon.ico').read_bytes()
+        self.assertEqual(struct.unpack_from('<HHH',data),(0,1,3))
+        self.assertEqual({(data[6+i*16],data[7+i*16]) for i in range(3)},{(16,16),(32,32),(48,48)})
+    def test_missing_favicon_link_is_rejected_even_with_valid_hash(self):
+        import hashlib
+        html=self.root/'index.html';report=self.root/'build-report.json'
+        original_html=html.read_bytes();original_report=report.read_bytes()
+        try:
+            html.write_bytes(original_html.replace(b'./favicon.svg?v=1',b'./missing.svg?v=1'))
+            updated=json.loads(original_report)
+            updated['sha256']['index.html']=hashlib.sha256(html.read_bytes()).hexdigest()
+            report.write_text(json.dumps(updated),encoding='utf-8')
+            with self.assertRaisesRegex(ValueError,'Favicon'):
+                auditor.audit(self.root)
+        finally:
+            html.write_bytes(original_html);report.write_bytes(original_report)

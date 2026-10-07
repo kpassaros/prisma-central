@@ -107,10 +107,14 @@ def build(output):
         css = (ROOT / 'prisma/web/panel.css').read_text(encoding='utf-8') + '\n' + (ROOT / 'site/site.css').read_text(encoding='utf-8')
         (staged / 'assets/panel.css').write_text(css, encoding='utf-8')
         shutil.copyfile(ROOT / 'site/adapter.js', staged / 'assets/adapter.js')
+        # Ícones locais: SVG adaptativo e ICO de compatibilidade, sem mudar a UI Python.
+        for name in ('favicon.svg', 'favicon.ico'):
+            shutil.copyfile(ROOT / 'site' / name, staged / name)
         html = (ROOT / 'prisma/web/index.html').read_text(encoding='utf-8')
         html = html.replace('/web/panel.css', './assets/panel.css').replace('/web/app.js', './assets/app.js')
         html = html.replace('<title>Prisma Demo — conciliação sintética</title>', '<title>Prisma Central — Engenharia de Dados e Conciliação</title><meta name="description" content="Explore qualidade e conciliação entre três fontes fictícias e acompanhe o pipeline de engenharia de dados. Portfólio de Kaíque Passaros."><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data:; connect-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'none\'">')
         html = html.replace('<script nonce="__NONCE__">window.PRISMA_DEMO_BOOT=__BOOTSTRAP__;</script>', '<script src="./assets/adapter.js" defer></script>')
+        html = html.replace('</head>', '<link rel="icon" href="./favicon.ico?v=1" sizes="16x16 32x32 48x48" type="image/x-icon"><link rel="icon" href="./favicon.svg?v=1" sizes="any" type="image/svg+xml"></head>')
         (staged / 'index.html').write_text(html, encoding='utf-8')
         (staged / '.nojekyll').write_text('')
         (staged / MARKER).write_text('Prisma static build v1\n')
@@ -120,7 +124,7 @@ def build(output):
                   'pipeline': ['generate', 'check', 'HTTP loopback extract', 'SnapshotPanel validation', 'reconcile', 'static export'],
                   'sha256': asset_hashes, 'external_requests': False}
         write_json(staged / 'build-report.json', report)
-        allowed = {'.nojekyll', MARKER, 'index.html', 'build-report.json', 'assets/app.js', 'assets/adapter.js', 'assets/panel.css', 'data/demo.json',
+        allowed = {'.nojekyll', MARKER, 'favicon.svg', 'favicon.ico', 'index.html', 'build-report.json', 'assets/app.js', 'assets/adapter.js', 'assets/panel.css', 'data/demo.json',
                    *('data/snapshots/' + f for f in ('manifest.json','core.jsonl','crm.jsonl','omnichannel.jsonl','conversations.jsonl','messages.jsonl'))}
         actual = {str(p.relative_to(staged)) for p in staged.rglob('*') if p.is_file()}
         if actual != allowed: raise ValueError('Arquivos fora da allowlist pública: ' + str(actual ^ allowed))

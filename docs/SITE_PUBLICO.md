@@ -83,3 +83,26 @@ A revisão no navegador é registrada junto à entrega; não substitui execuçã
 Antes do merge, basta fechar o PR sem alterar a main. Depois, reverter o commit/merge que adicionou o site e restaurar os arquivos modificados da versão estável. Se for preciso retirar imediatamente o site, despublicar via Settings → Pages; confirmar o estado público após a ação. Reverter arquivos e despublicar são ações diferentes.
 
 `SHA256SUMS.txt` é atualizado para a árvore-fonte da entrega, excluindo `_site/`, caches e o próprio manifesto. Não equivale aos hashes dos snapshots nem a uma assinatura de autenticidade. Os hashes públicos gerados ficam em `_site/build-report.json`.
+
+
+## Favicon — correção incremental
+
+O build público copia `site/favicon.svg` e `site/favicon.ico` para a raiz do
+artefato e insere referências relativas no HTML gerado. Não editar `_site`
+manualmente: o próximo build o recria. Nenhuma mudança na aplicação Python local.
+
+O SVG reutiliza integralmente a geometria e as cores de entrada do símbolo
+aprovado em `identidade_prisma/prisma-symbol.svg`. O contorno acompanha a
+preferência claro/escuro do navegador por `prefers-color-scheme`; isso não depende
+do seletor Aurora/Nocturne da página. O ICO contém 16, 32 e 48 pixels, com contorno
+Aurora e transparência, para navegadores sem suporte ao SVG. Sem fontes externas,
+JavaScript extra, manifest de PWA ou alteração da identidade visual.
+
+A query `?v=1` permite versionar referências dos ícones. Ao mudar os ícones,
+atualize a versão das referências e os testes correspondentes. Navegadores
+podem manter cache de favicon; após o deploy, confirmar também em janela anônima.
+
+Checks: `python -m unittest discover -s tests -v`,
+`python scripts/build_site.py`, `python scripts/audit_site.py _site`.
+A allowlist e os hashes incluem os dois ícones. O workflow existente permanece
+inalterado: PR executa build/testes; deploy somente na main.
